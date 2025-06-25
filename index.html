@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Congratulations Dude!</title>
+  <style>
+    :root {
+      --bg-color: #222;
+      --text-color: white;
+      --success-color: #4caf50;
+    }
+
+    body.light {
+      --bg-color: #f9f9f9;
+      --text-color: #111;
+      --success-color: #00c853;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: sans-serif;
+      text-align: center;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .container {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .checkmark-circle {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .checkmark-circle .background {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--success-color);
+    }
+
+    .checkmark-circle .checkmark {
+      transform-origin: 50% 50%;
+      width: 56px;
+      height: 28px;
+      border-left: 8px solid white;
+      border-bottom: 8px solid white;
+      position: absolute;
+      top: 18px;
+      left: 22px;
+      transform: rotate(-45deg) scale(0);
+    }
+
+    .checkmark-circle .checkmark.draw {
+      animation: draw 0.5s ease-in-out forwards 0.5s;
+    }
+
+    @keyframes draw {
+      0% {
+        transform: rotate(-45deg) scale(0);
+      }
+      100% {
+        transform: rotate(-45deg) scale(1);
+      }
+    }
+
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5em;
+    }
+
+    p {
+      font-size: 1.2em;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      background-color: #eee;
+      opacity: 0.9;
+    }
+
+    @keyframes confetti-slow {
+      to {
+        transform: translate3d(25px, 105vh, 0) rotateX(360deg) rotateY(180deg);
+      }
+    }
+
+    @keyframes confetti-medium {
+      to {
+        transform: translate3d(100px, 105vh, 0) rotateX(100deg) rotateY(360deg);
+      }
+    }
+
+    @keyframes confetti-fast {
+      to {
+        transform: translate3d(-50px, 105vh, 0) rotateX(10deg) rotateY(250deg);
+      }
+    }
+
+    .confetti--animation-slow {
+      animation: confetti-slow 2.25s linear 1 forwards;
+    }
+
+    .confetti--animation-medium {
+      animation: confetti-medium 1.75s linear 1 forwards;
+    }
+
+    .confetti--animation-fast {
+      animation: confetti-fast 1.25s linear 1 forwards;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .theme-toggle:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="toggleTheme" title="Toggle Theme">🌙</button>
+
+  <div class="container"></div>
+
+  <div class="content">
+    <div class="checkmark-circle">
+      <div class="background"></div>
+      <div class="checkmark draw"></div>
+    </div>
+    <h1>Congratulations!</h1>
+    <p>Your Vhost / Domain / Sub Domain has been Set!</p>
+  </div>
+
+  <script>
+    // Confetti
+    (function () {
+      const container = document.querySelector('.container');
+      const confettiFrequency = 40;
+      const colors = ['#B1B2FF', '#AAC4FF', '#2D87B0', '#D2DAFF', '#EEF1FF'];
+      const anims = ['slow', 'medium', 'fast'];
+
+      function randItem(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function createConfetti() {
+        const conf = document.createElement('div');
+        conf.classList.add('confetti', 'confetti--animation-' + randItem(anims));
+        const size = (Math.random() * 3 + 7) + 'px';
+        conf.style.width = conf.style.height = size;
+        conf.style.left = Math.random() * window.innerWidth + 'px';
+        conf.style.backgroundColor = randItem(colors);
+
+        container.appendChild(conf);
+        setTimeout(() => container.removeChild(conf), 3000);
+      }
+
+      setInterval(createConfetti, 1000 / confettiFrequency);
+    })();
+
+    // Theme toggle
+    const toggleButton = document.getElementById('toggleTheme');
+
+    function updateIcon() {
+      toggleButton.textContent = document.body.classList.contains('light') ? '🌙' : '☀️';
+    }
+
+    toggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      updateIcon();
+    });
+
+    // Initial icon
+    updateIcon();
+  </script>
+</body>
+</html>
